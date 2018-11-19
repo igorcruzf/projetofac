@@ -51,9 +51,10 @@ class Tarefas(Screen):
         texto = self.ids.texto.text
         self.ids.box.add_widget(Tarefa(text=texto))
         self.ids.texto.text = ''
-        x = texto
+    
+    def encontrarObjeto(self, x):
         if x == 'bicicleta':
-          foto = 'Foto2.jpg'
+            foto = 'Foto2.jpg'
     
         #Imagem padrao
         img = cv.imread('Foto.jpg',0)
