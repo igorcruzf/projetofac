@@ -3,17 +3,24 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
 from kivy.uix.image import Image
-from kivy.factory import Factory
-from kivy.properties import ObjectProperty
-from kivy.uix.popup import Popup
+from kivy.clock import Clock
 
 import os
 import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
 
-class Imagem(Screen):
-    pass
+
+
+class MyImageWidget(Screen):
+    def __init__(self,**kwargs):
+        super(MyImageWidget,self).__init__(**kwargs)
+        self.image = Image(source='Resposta.png')
+        self.add_widget(self.image)
+        Clock.schedule_interval(self.update_pic,1)
+
+    def update_pic(self,dt):
+        self.image.reload()
 
 class Gerenciador(ScreenManager):
     pass
