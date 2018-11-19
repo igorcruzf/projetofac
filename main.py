@@ -2,10 +2,18 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
-from kivy.core.image import Image as CoreImage
+from kivy.uix.image import Image
+from kivy.factory import Factory
+from kivy.properties import ObjectProperty
+from kivy.uix.popup import Popup
+
+import os
 import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
+
+class Imagem(Screen):
+    pass
 
 class Gerenciador(ScreenManager):
     pass
@@ -13,14 +21,14 @@ class Gerenciador(ScreenManager):
 class Menu(Screen):
     pass
 
+class Test(App):
+    def build(self):
+        return Gerenciador()
+
 class Tarefa(BoxLayout):
     def __init__(self,text='',**kwargs):
         super(Tarefa, self).__init__(**kwargs)
         self.ids.label.text = text
-
-class Test(App):
-    def build(self):
-        return Gerenciador()
 
 class Tarefas(Screen):
     def __init__(self,tarefas=[],**kwargs):
@@ -81,7 +89,8 @@ class Tarefas(Screen):
         #para criar uma nova figura!
         fig = plt.gcf() #getcurrentfigure
         fig.savefig('Resposta.png')
-	im = CoreImage("Resposta.png")
+	im = Image(source = 'Resposta.png')
+        im.reload()
     
         #plt.show() #faz em formato de arquivo
 

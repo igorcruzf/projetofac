@@ -1,9 +1,11 @@
 <Gerenciador>:
     Menu:
         name: 'menu'
+    Imagem:
+        name: 'imagem'
     Tarefas:
         name: 'tarefas'
-    
+
 <Menu>:
     BoxLayout:
         orientation:'vertical'
@@ -16,12 +18,24 @@
             allow_stretch:True
         Button:
             text:'Objetos'
-            on_release:app.root.current = 'tarefas'
+            on_release: app.root.current = 'imagem'
         Button:
             text:'Local'
+            on_release: app.root.current = 'tarefas'
         Button:
             text:'Sair'
             on_release:app.stop()
+
+<Imagem>:
+    BoxLayout:
+        orientation:'vertical'
+        padding:0
+        spacing:50
+        Image:
+            source:'Resposta.png'
+            size_hint_y:None
+            height:1000
+            allow_stretch:True
 
 <Tarefas>:
     BoxLayout:
@@ -62,3 +76,4 @@
         size_hint_x:None
         width:60
         on_release:app.root.get_screen('tarefas').ids.box.remove_widget(root)
+
