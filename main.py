@@ -8,12 +8,20 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
+import json
 
 import os
 import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
 
+try:
+    FileNotFoundError
+except NameError:
+    FileNotFoundError = IOError
+
+caminho = ''
+textodatarefa = ''
 
 
 class MyImageWidget(Screen):
@@ -42,13 +50,15 @@ class Tarefa(BoxLayout):
         self.ids.label.text = text
 
 class Tarefas(Screen):
-    def __init__(self,tarefas=[],**kwargs):
-        super(Tarefas, self).__init__(**kwargs)
-        for tarefa in tarefas:
-            self.ids.box.add_widget(Tarefa(text=tarefa))
-
+    tarefas = []
     def on_pre_enter(self):
+        global caminho
+        self.ids.box.clear_widgets()
+        caminho = App.get_running_app().user_data_dir+'/'
+        self.loadData()
         Window.bind(on_keyboard=self.voltar)
+        for tarefa in self.tarefas:
+            self.ids.box.add_widget(Tarefa(text=tarefa))
 
     def voltar(self,window,key,*args):
         if key == 27:
@@ -58,14 +68,35 @@ class Tarefas(Screen):
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.voltar)
 
+    def loadData(self,*args):
+        try:        
+            with open(caminho+'data.json', 'r') as data:
+                try:
+                    self.tarefas = json.load(data)
+                except ValueError:
+                    pass
+        except FileNotFoundError:
+            pass
+
+    def saveData(self, *args):
+        with open(caminho+'data.json', 'w') as data:
+            json.dump(self.tarefas,data)
+
+    def removeWidget(self, tarefa):
+        texto = tarefa.ids.label.text
+        self.ids.box.remove_widget(tarefa)
+        self.tarefas.remove(texto)
+        self.saveData()
+
     def addWidget(self):
         texto = self.ids.texto.text
         self.ids.box.add_widget(Tarefa(text=texto))
         self.ids.texto.text = ''
+        self.tarefas.append(texto)
+        self.saveData()
     
     def encontrarObjeto(self, x):
-        if x == 'bicicleta':
-            foto = 'Foto2.jpg'
+        foto = caminho+x
     
         #Imagem padrao
         img = cv.imread('Foto.jpg',0)
@@ -118,6 +149,10 @@ class Root(Screen):
     loadfile = ObjectProperty(None)
     savefile = ObjectProperty(None)
 
+    def textoDaTarefa(self, tarefa):
+        global textodatarefa
+        textodatarefa = tarefa.ids.label.text
+
     def dismiss_popup(self):
         self._popup.dismiss()
 
@@ -127,21 +162,16 @@ class Root(Screen):
                             size_hint=(0.9, 0.9))
         self._popup.open()
 
-    def show_save(self):
-        content = SaveDialog(save=self.save, cancel=self.dismiss_popup)
-        self._popup = Popup(title="Save file", content=content,
-                            size_hint=(0.9, 0.9))
-        self._popup.open()
 
     def load(self, filename):
         self.ids.image.source = filename[0]
 
         self.dismiss_popup()
 
-    def save(self, path, filename):
+    def save(self):
 	with open((self.ids.image.source), 'rb') as f:
             data = f.read()
-        with open(os.path.join(path, filename), 'w') as stream:
+        with open(caminho+textodatarefa, 'w') as stream:
             stream.write(data)
 
         self.dismiss_popup()
