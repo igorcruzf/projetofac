@@ -7,6 +7,10 @@
         name: 'tarefas'
     Root:
         name: 'Root'
+    Locais:
+        name: 'locais'
+    Root2:
+        name: 'Root2'
 
 <Menu>:
     BoxLayout:
@@ -15,15 +19,18 @@
         spacing:50
         canvas.before:
             Rectangle:
-                #source:"cinza.jpg"
+                source:"cinza.jpg"
                 pos:self.pos
                 size:self.size
                 
         Button:
+            text:'Locais'
+            on_release: app.root.current = 'locais'
+        Button:
             text:'Objetos'
             on_release: app.root.current = 'tarefas'
         Button:
-            text:'Local'
+            text:'X'
             on_release: app.root.current = 'MyImageWidget'
         Button:
             text:'Sair'
@@ -35,6 +42,82 @@
             ActionPrevious:
                 title:'Menu'
                 on_release:app.root.current = 'menu'
+            ActionButton:
+                text:'Sair'
+                on_release:app.stop()
+
+<Locais>:
+    BoxLayout:
+        orientation:'vertical'
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title:'Menu'
+                    on_release:app.root.current = 'menu'
+                ActionButton:
+                    text:'Sair'
+                    on_release:app.stop()
+        ScrollView:
+            BoxLayout:
+                id:box2
+                orientation:'vertical'
+                size_hint_y:None
+                height:self.minimum_height
+        BoxLayout:
+            size_hint_y:None
+            height:60
+            TextInput:
+                id:texto2
+            Button:
+                text:'+'
+                size_hint_x:None
+                width:60
+                on_release:root.addWidget2()
+
+<Local>:
+    size_hint_y:None
+    height:200
+    Button:
+        id:label2
+        on_release:app.root.get_screen('Root2').fotoDoLocal(self.text)
+    Button:
+        text:'Imagem'
+        size_hint_x:None
+        width:60
+        on_release:app.root.current = 'Root2'
+        on_release: app.root.get_screen('Root2').textoDoLocal(root)
+    Button:
+        text:'X'
+        size_hint_x:None
+        width:60
+        on_release:app.root.get_screen('locais').removeWidget2(root)
+
+<Root2>:
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: 'Load'
+                on_release: root.show_load()
+            Button:
+                text: 'Save'
+                on_release: root.save()
+                on_release: app.root.current = 'locais'
+
+        BoxLayout:
+            Image:
+                id: image2
+                source: ""
+            RstDocument:
+
+                show_errors: True
+    ActionBar:
+        ActionView:
+            ActionPrevious:
+                title:'Locais'
+                on_release:app.root.current = 'locais'
             ActionButton:
                 text:'Sair'
                 on_release:app.stop()
