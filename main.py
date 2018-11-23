@@ -37,8 +37,15 @@ class MyImageWidget(Screen):
     def update_pic(self,dt):
         self.image.reload()
 
+class NaoEncontrado(Screen):
+    def __init__(self,**kwargs):
+        super(NaoEncontrado, self).__init__(**kwargs)
+        self.image = Image(source='logo.png')
+        self.add_widget(self.image)
+
 
 class Gerenciador(ScreenManager):
+    
     pass
 
 class Menu(Screen):
@@ -108,6 +115,7 @@ class Tarefa(BoxLayout):
 
 class Tarefas(Screen):
     tarefas = []
+
     def on_pre_enter(self):
         global caminho
         self.ids.box.clear_widgets()
@@ -194,7 +202,7 @@ class Tarefas(Screen):
                 fig.savefig('Resposta.png')
             #plt.show() #faz em formato de executavel
             except cv.error as e:
-                pass
+                App.get_running_app().root.current = 'naoencontrado'
         except AttributeError:
             pass
 
