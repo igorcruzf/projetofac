@@ -29,8 +29,10 @@ foto_local = ''
 
 class MyImageWidget(Screen):
     def __init__(self,**kwargs):
+        global caminho
+        caminho = App.get_running_app().user_data_dir+'/'
         super(MyImageWidget,self).__init__(**kwargs)
-        self.image = Image(source='Resposta.png')
+        self.image = Image(source=caminho+'Resposta.png')
         self.add_widget(self.image)
         Clock.schedule_interval(self.update_pic,1)
 
@@ -199,7 +201,7 @@ class Tarefas(Screen):
     
             #para criar uma nova figura!
                 fig = plt.gcf() #getcurrentfigure
-                fig.savefig('Resposta.png')
+                fig.savefig(caminho+'Resposta.png')
             #plt.show() #faz em formato de executavel
             except cv.error as e:
                 App.get_running_app().root.current = 'naoencontrado'
