@@ -5,18 +5,19 @@
         name: 'MyImageWidget'
     Tarefas:
         name: 'tarefas'
+    Root:
+        name: 'Root'
 
 <Menu>:
     BoxLayout:
         orientation:'vertical'
         padding:200
-        spacing:50        
+        spacing:50
         canvas.before:
             Rectangle:
                 pos:self.pos
                 size:self.size
                 source:'cinza.jpg'
-
         Button:
             text:'Local'
             on_release: app.root.current = 'MyImageWidget'
@@ -26,6 +27,7 @@
         Button:
             text:'Sair'
             on_release:app.stop()
+
 <MyImageWidget>:
     ActionBar:
         ActionView:
@@ -36,14 +38,13 @@
                 text:'Sair'
                 on_release:app.stop()
 
-
 <Tarefas>:
     BoxLayout:
         orientation:'vertical'
         ActionBar:
             ActionView:
                 ActionPrevious:
-                    title:'Menu'
+                    title:'Tarefas'
                     on_release:app.root.current = 'menu'
                 ActionButton:
                     text:'Sair'
@@ -64,6 +65,7 @@
                 size_hint_x:None
                 width:60
                 on_release:root.addWidget()
+                on_release:app.root.current = 'Root'
 
 <Tarefa>:
     size_hint_y:None
@@ -76,3 +78,70 @@
         size_hint_x:None
         width:60
         on_release:app.root.get_screen('tarefas').ids.box.remove_widget(root)
+
+<Root>:
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: 'Load'
+                on_release: root.show_load()
+            Button:
+                text: 'Save'
+                on_release: root.show_save()
+
+        BoxLayout:
+            Image:
+                id: image
+                source: ""
+            RstDocument:
+
+                show_errors: True
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.selection)
+
+<SaveDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+            on_selection: text_input.text = self.selection and self.selection[0] or ''
+
+        TextInput:
+            id: text_input
+            size_hint_y: None
+            height: 30
+            multiline: False
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Save"
+                on_release: root.save(filechooser.path, text_input.text)
