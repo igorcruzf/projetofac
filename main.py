@@ -99,23 +99,22 @@ class Tarefas(Screen):
     def encontrarObjeto(self, x):
         global imagem_resposta
         foto = caminho+x
+        try:
+            #Imagem padrao
+            img = cv.imread('Foto.jpg',0)
+            img2 = img.copy()
     
-        #Imagem padrao
-        img = cv.imread('Foto.jpg',0)
-        img2 = img.copy()
+            #Imagem a ser encontrada na imagem padrao
+            template = cv.imread(foto,0)
+            w, h = template.shape[::-1]
     
-        #Imagem a ser encontrada na imagem padrao
-        template = cv.imread(foto,0)
-        w, h = template.shape[::-1]
-    
-        # All the 6 methods for comparison in a list
-        #methods = ['cv.TM_CCOEFF', 'cv.TM_CCOEFF_NORMED', 'cv.TM_CCORR',
+            # All the 6 methods for comparison in a list
+            #methods = ['cv.TM_CCOEFF', 'cv.TM_CCOEFF_NORMED', 'cv.TM_CCORR',
                     #'cv.TM_CCORR_NORMED', 'cv.TM_SQDIFF', 'cv.TM_SQDIFF_NORMED']
         
-        img = img2.copy()
-        method = eval('cv.TM_CCOEFF_NORMED')
+            img = img2.copy()
+            method = eval('cv.TM_CCOEFF_NORMED')
     
-        try:
 	    # Apply template Matching
             res = cv.matchTemplate(img,template,method)
             min_val, max_val, min_loc, max_loc = cv.minMaxLoc(res)
@@ -137,16 +136,11 @@ class Tarefas(Screen):
             fig.savefig('Resposta.png')
 
         #plt.show() #faz em formato de arquivo
-        except:
+        except AttributeError:
             pass
 
 class LoadDialog(FloatLayout):
     load = ObjectProperty(None)
-    cancel = ObjectProperty(None)
-
-
-class SaveDialog(FloatLayout):
-    save = ObjectProperty(None)
     cancel = ObjectProperty(None)
 
 
