@@ -15,15 +15,16 @@
         spacing:50
         canvas.before:
             Rectangle:
+                #source:"cinza.jpg"
                 pos:self.pos
                 size:self.size
-                source:'cinza.jpg'
-        Button:
-            text:'Local'
-            on_release: app.root.current = 'MyImageWidget'
+                
         Button:
             text:'Objetos'
             on_release: app.root.current = 'tarefas'
+        Button:
+            text:'Local'
+            on_release: app.root.current = 'MyImageWidget'
         Button:
             text:'Sair'
             on_release:app.stop()
@@ -44,7 +45,7 @@
         ActionBar:
             ActionView:
                 ActionPrevious:
-                    title:'Tarefas'
+                    title:'Menu'
                     on_release:app.root.current = 'menu'
                 ActionButton:
                     text:'Sair'
@@ -109,7 +110,7 @@
     ActionBar:
         ActionView:
             ActionPrevious:
-                title:'Menu'
+                title:'Objetos'
                 on_release:app.root.current = 'tarefas'
             ActionButton:
                 text:'Sair'
