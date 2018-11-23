@@ -8,6 +8,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
+from kivy.uix.image import Image
 import json
 
 import os
@@ -23,7 +24,6 @@ except NameError:
 caminho = ''
 textodatarefa = ''
 
-
 class MyImageWidget(Screen):
     def __init__(self,**kwargs):
         super(MyImageWidget,self).__init__(**kwargs)
@@ -33,6 +33,7 @@ class MyImageWidget(Screen):
 
     def update_pic(self,dt):
         self.image.reload()
+
 
 class Gerenciador(ScreenManager):
     pass
@@ -96,6 +97,7 @@ class Tarefas(Screen):
         self.saveData()
     
     def encontrarObjeto(self, x):
+        global imagem_resposta
         foto = caminho+x
     
         #Imagem padrao
@@ -113,27 +115,30 @@ class Tarefas(Screen):
         img = img2.copy()
         method = eval('cv.TM_CCOEFF_NORMED')
     
-        # Apply template Matching
-        res = cv.matchTemplate(img,template,method)
-        min_val, max_val, min_loc, max_loc = cv.minMaxLoc(res)
+        try:
+	    # Apply template Matching
+            res = cv.matchTemplate(img,template,method)
+            min_val, max_val, min_loc, max_loc = cv.minMaxLoc(res)
         
-        top_left = max_loc
+            top_left = max_loc
             
-        bottom_right = (top_left[0] + w, top_left[1] + h)
-        cv.rectangle(img,top_left, bottom_right, 255, 2)
+            bottom_right = (top_left[0] + w, top_left[1] + h)
+            cv.rectangle(img,top_left, bottom_right, 255, 2)
         
         #plt.subplot(121),plt.imshow(template,cmap = 'gray')
         #plt.title('Objeto da busca'), plt.xticks([]), plt.yticks([])
         
-        plt.plot(122),plt.imshow(img,cmap = 'gray')
-        plt.title('Ponto detectado'), plt.xticks([]), plt.yticks([])
-        plt.suptitle(x)
+            plt.plot(122),plt.imshow(img,cmap = 'gray')
+            plt.title('Ponto detectado'), plt.xticks([]), plt.yticks([])
+            plt.suptitle(x)
     
         #para criar uma nova figura!
-        fig = plt.gcf() #getcurrentfigure
-        fig.savefig('Resposta.png')
+            fig = plt.gcf() #getcurrentfigure
+            fig.savefig('Resposta.png')
 
         #plt.show() #faz em formato de arquivo
+        except:
+            pass
 
 class LoadDialog(FloatLayout):
     load = ObjectProperty(None)
@@ -175,5 +180,6 @@ class Root(Screen):
             stream.write(data)
 
         self.dismiss_popup()
+
 
 Test().run()
