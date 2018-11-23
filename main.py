@@ -4,6 +4,10 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
 from kivy.uix.image import Image
 from kivy.clock import Clock
+from kivy.uix.floatlayout import FloatLayout
+from kivy.factory import Factory
+from kivy.properties import ObjectProperty
+from kivy.uix.popup import Popup
 
 import os
 import cv2 as cv
@@ -15,7 +19,7 @@ from matplotlib import pyplot as plt
 class MyImageWidget(Screen):
     def __init__(self,**kwargs):
         super(MyImageWidget,self).__init__(**kwargs)
-        self.image=Image(source='Resposta.png')
+        self.image = Image(source='Resposta.png')
         self.add_widget(self.image)
         Clock.schedule_interval(self.update_pic,1)
 
@@ -97,9 +101,49 @@ class Tarefas(Screen):
         #para criar uma nova figura!
         fig = plt.gcf() #getcurrentfigure
         fig.savefig('Resposta.png')
-	im = Image(source = 'Resposta.png')
-        im.reload()
-    
+
         #plt.show() #faz em formato de arquivo
+
+class LoadDialog(FloatLayout):
+    load = ObjectProperty(None)
+    cancel = ObjectProperty(None)
+
+
+class SaveDialog(FloatLayout):
+    save = ObjectProperty(None)
+    cancel = ObjectProperty(None)
+
+
+class Root(Screen):
+    loadfile = ObjectProperty(None)
+    savefile = ObjectProperty(None)
+
+    def dismiss_popup(self):
+        self._popup.dismiss()
+
+    def show_load(self):
+        content = LoadDialog(load=self.load, cancel=self.dismiss_popup)
+        self._popup = Popup(title="Load file", content=content,
+                            size_hint=(0.9, 0.9))
+        self._popup.open()
+
+    def show_save(self):
+        content = SaveDialog(save=self.save, cancel=self.dismiss_popup)
+        self._popup = Popup(title="Save file", content=content,
+                            size_hint=(0.9, 0.9))
+        self._popup.open()
+
+    def load(self, filename):
+        self.ids.image.source = filename[0]
+
+        self.dismiss_popup()
+
+    def save(self, path, filename):
+	with open((self.ids.image.source), 'rb') as f:
+            data = f.read()
+        with open(os.path.join(path, filename), 'w') as stream:
+            stream.write(data)
+
+        self.dismiss_popup()
 
 Test().run()
