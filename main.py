@@ -23,7 +23,7 @@ except NameError:
     FileNotFoundError = IOError
 
 caminho = ''
-textodatarefa = ''
+textodoobjeto = ''
 textodolocal = ''
 foto_local = ''
 
@@ -42,7 +42,13 @@ class MyImageWidget(Screen):
 class NaoEncontrado(Screen):
     def __init__(self,**kwargs):
         super(NaoEncontrado, self).__init__(**kwargs)
-        self.image = Image(source='logo.png')
+        self.image = Image(source='naoencontrado.png')
+        self.add_widget(self.image)
+
+class DefinaImagem(Screen):
+    def __init__(self,**kwargs):
+        super(DefinaImagem, self).__init__(**kwargs)
+        self.image = Image(source='semimagem.png')
         self.add_widget(self.image)
 
 
@@ -110,13 +116,13 @@ class Locais(Screen):
         self.locais.append(texto)
         self.saveData()
 
-class Tarefa(BoxLayout):
+class Objeto(BoxLayout):
     def __init__(self,text='',**kwargs):
-        super(Tarefa, self).__init__(**kwargs)
+        super(Objeto, self).__init__(**kwargs)
         self.ids.label.text = text
 
-class Tarefas(Screen):
-    tarefas = []
+class Objetos(Screen):
+    objetos = []
 
     def on_pre_enter(self):
         global caminho
@@ -124,8 +130,8 @@ class Tarefas(Screen):
         caminho = App.get_running_app().user_data_dir+'/'
         self.loadData()
         Window.bind(on_keyboard=self.voltar)
-        for tarefa in self.tarefas:
-            self.ids.box.add_widget(Tarefa(text=tarefa))
+        for objeto in self.objetos:
+            self.ids.box.add_widget(Objeto(text=objeto))
 
     def voltar(self,window,key,*args):
         if key == 27:
@@ -139,7 +145,7 @@ class Tarefas(Screen):
         try:        
             with open(caminho+'data.json', 'r') as data:
                 try:
-                    self.tarefas = json.load(data)
+                    self.objetos = json.load(data)
                 except ValueError:
                     pass
         except FileNotFoundError:
@@ -147,19 +153,19 @@ class Tarefas(Screen):
 
     def saveData(self, *args):
         with open(caminho+'data.json', 'w') as data:
-            json.dump(self.tarefas,data)
+            json.dump(self.objetos,data)
 
-    def removeWidget(self, tarefa):
-        texto = tarefa.ids.label.text
-        self.ids.box.remove_widget(tarefa)
-        self.tarefas.remove(texto)
+    def removeWidget(self, objeto):
+        texto = objeto.ids.label.text
+        self.ids.box.remove_widget(objeto)
+        self.objetos.remove(texto)
         self.saveData()
 
     def addWidget(self):
         texto = self.ids.texto.text
-        self.ids.box.add_widget(Tarefa(text=texto))
+        self.ids.box.add_widget(Objeto(text=texto))
         self.ids.texto.text = ''
-        self.tarefas.append(texto)
+        self.objetos.append(texto)
         self.saveData()
     
     def encontrarObjeto(self, x):
@@ -202,11 +208,13 @@ class Tarefas(Screen):
             #para criar uma nova figura!
                 fig = plt.gcf() #getcurrentfigure
                 fig.savefig(caminho+'Resposta.png')
+
+                App.get_running_app().root.current = 'resposta'
             #plt.show() #faz em formato de executavel
             except cv.error as e:
                 App.get_running_app().root.current = 'naoencontrado'
         except AttributeError:
-            pass
+            App.get_running_app().root.current = 'definaimagem'
 
 class LoadDialog(FloatLayout):
     load = ObjectProperty(None)
@@ -251,9 +259,9 @@ class Root(Screen):
     loadfile = ObjectProperty(None)
     savefile = ObjectProperty(None)
 
-    def textoDaTarefa(self, tarefa):
-        global textodatarefa 
-        textodatarefa = tarefa.ids.label.text
+    def textoDoObjeto(self, objeto):
+        global textodoobjeto
+        textodoobjeto = objeto.ids.label.text
 
     def dismiss_popup(self):
         self._popup.dismiss()
@@ -273,7 +281,7 @@ class Root(Screen):
     def save(self):
 	with open((self.ids.image.source), 'rb') as f:
             data = f.read()
-        with open(caminho+textodatarefa, 'w') as stream:
+        with open(caminho+textodoobjeto, 'w') as stream:
             stream.write(data)
 
         self.dismiss_popup()
