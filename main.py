@@ -15,7 +15,7 @@ from matplotlib import pyplot as plt
 class MyImageWidget(Screen):
     def __init__(self,**kwargs):
         super(MyImageWidget,self).__init__(**kwargs)
-        self.image = Image(source='Resposta.png')
+        self.image=Image(source='Resposta.png')
         self.add_widget(self.image)
         Clock.schedule_interval(self.update_pic,1)
 

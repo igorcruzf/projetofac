@@ -10,12 +10,13 @@
     BoxLayout:
         orientation:'vertical'
         padding:200
-        spacing:50
-        Image:
-            source:'logo.png'
-            size_hint_y:None
-            height:300
-            allow_stretch:True
+        spacing:50        
+        canvas.before:
+            Rectangle:
+                pos:self.pos
+                size:self.size
+                source:'cinza.jpg'
+
         Button:
             text:'Local'
             on_release: app.root.current = 'MyImageWidget'
@@ -25,7 +26,15 @@
         Button:
             text:'Sair'
             on_release:app.stop()
-
+<MyImageWidget>:
+    ActionBar:
+        ActionView:
+            ActionPrevious:
+                title:'Menu'
+                on_release:app.root.current = 'menu'
+            ActionButton:
+                text:'Sair'
+                on_release:app.stop()
 
 
 <Tarefas>:
@@ -34,7 +43,7 @@
         ActionBar:
             ActionView:
                 ActionPrevious:
-                    title:'Tarefas'
+                    title:'Menu'
                     on_release:app.root.current = 'menu'
                 ActionButton:
                     text:'Sair'
