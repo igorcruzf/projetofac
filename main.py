@@ -23,6 +23,8 @@ except NameError:
 
 caminho = ''
 textodatarefa = ''
+textodolocal = ''
+foto_local = ''
 
 class MyImageWidget(Screen):
     def __init__(self,**kwargs):
@@ -44,6 +46,59 @@ class Menu(Screen):
 class Test(App):
     def build(self):
         return Gerenciador()
+
+class Local(BoxLayout):
+    def __init__(self,text='',**kwargs):
+        super(Local, self).__init__(**kwargs)
+        self.ids.label2.text = text
+
+class Locais(Screen):
+    locais = []
+    def on_pre_enter(self):
+        global caminho
+        caminho = App.get_running_app().user_data_dir+'/'
+        self.ids.box2.clear_widgets()
+        self.loadData()
+        Window.bind(on_keyboard=self.voltar)
+        for local in self.locais:
+            self.ids.box2.add_widget(Local(text=local))
+
+    def voltar(self,window,key,*args):
+        if key == 27:
+            App.get_running_app().root.current = 'menu'
+            return True
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.voltar)
+
+    def loadData(self,*args):
+        global caminho
+        try:        
+            with open(caminho+'data2.json', 'r') as data:
+                try:
+                    self.locais = json.load(data)
+                except ValueError:
+                    pass
+        except FileNotFoundError:
+            pass
+
+    def saveData(self, *args):
+        global caminho
+        with open(caminho+'data2.json', 'w') as data:
+            json.dump(self.locais,data)
+
+    def removeWidget2(self, local):
+        texto = local.ids.label2.text
+        self.ids.box2.remove_widget(local)
+        self.locais.remove(texto)
+        self.saveData()
+
+    def addWidget2(self):
+        texto = self.ids.texto2.text
+        self.ids.box2.add_widget(Local(text=texto))
+        self.ids.texto2.text = ''
+        self.locais.append(texto)
+        self.saveData()
 
 class Tarefa(BoxLayout):
     def __init__(self,text='',**kwargs):
@@ -98,10 +153,12 @@ class Tarefas(Screen):
     
     def encontrarObjeto(self, x):
         global imagem_resposta
+        global foto_local
         foto = caminho+x
+        foto_L = caminho+foto_local
         try:
             #Imagem padrao
-            img = cv.imread('Foto.jpg',0)
+            img = cv.imread(foto_L,0)
             img2 = img.copy()
     
             #Imagem a ser encontrada na imagem padrao
@@ -143,13 +200,47 @@ class LoadDialog(FloatLayout):
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
 
+class Root2(Screen):
+    loadfile = ObjectProperty(None)
+    savefile = ObjectProperty(None)
+
+    def fotoDoLocal(self, text):
+        global foto_local
+        foto_local = text
+
+    def textoDoLocal(self, local):
+        global textodolocal
+        textodolocal = local.ids.label2.text
+
+    def dismiss_popup(self):
+        self._popup.dismiss()
+
+    def show_load(self):
+        content = LoadDialog(load=self.load, cancel=self.dismiss_popup)
+        self._popup = Popup(title="Load file", content=content,
+                            size_hint=(0.9, 0.9))
+        self._popup.open()
+
+
+    def load(self, filename):
+        self.ids.image2.source = filename[0]
+
+        self.dismiss_popup()
+
+    def save(self):
+	with open((self.ids.image2.source), 'rb') as f:
+            data = f.read()
+        with open(caminho+textodolocal, 'w') as stream:
+            stream.write(data)
+
+        self.dismiss_popup()
 
 class Root(Screen):
     loadfile = ObjectProperty(None)
     savefile = ObjectProperty(None)
 
     def textoDaTarefa(self, tarefa):
-        global textodatarefa
+        global textodatarefa 
         textodatarefa = tarefa.ids.label.text
 
     def dismiss_popup(self):
