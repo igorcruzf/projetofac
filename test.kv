@@ -20,20 +20,20 @@
 <Menu>:
     BoxLayout:
         orientation:'vertical'
-        padding:200
-        spacing:50
+        padding:100
+        spacing:35
         canvas.before:
             Rectangle:
                 source:"cinza.jpg"
                 pos:self.pos
                 size:self.size
-        Button:
+        ImageButton1:
             text:'Locais'
             on_release: app.root.current = 'locais'
-        Button:
+        ImageButton2:
             text:'Objetos'
             on_release: app.root.current = 'objetos'
-        Button:
+        ImageButton3:
             text:'Sair'
             on_release:app.stop()
 
@@ -50,6 +50,11 @@
 <Locais>:
     BoxLayout:
         orientation:'vertical'
+        canvas.before:
+            Rectangle:
+                source:"cinza.jpg"
+                pos:self.pos
+                size:self.size
         ActionBar:
             ActionView:
                 ActionPrevious:
@@ -69,7 +74,8 @@
             height:60
             TextInput:
                 id:texto2
-            Button:
+                multiline:False
+            ImageAdd:
                 text:'+'
                 size_hint_x:None
                 width:60
@@ -96,6 +102,19 @@
 <Root2>:
     BoxLayout:
         orientation: 'vertical'
+        canvas.before:
+            Rectangle:
+                source:"cinza.jpg"
+                pos:self.pos
+                size:self.size
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title:'Locais'
+                    on_release:app.root.current = 'locais'
+                ActionButton:
+                    text:'Sair'
+                    on_release:app.stop()
         BoxLayout:
             size_hint_y: None
             height: 30
@@ -110,18 +129,15 @@
             Image:
                 id: image2
                 source: ""
-    ActionBar:
-        ActionView:
-            ActionPrevious:
-                title:'Locais'
-                on_release:app.root.current = 'locais'
-            ActionButton:
-                text:'Sair'
-                on_release:app.stop()
 
 <Objetos>:
     BoxLayout:
         orientation:'vertical'
+        canvas.before:
+            Rectangle:
+                source:"cinza.jpg"
+                pos:self.pos
+                size:self.size
         ActionBar:
             ActionView:
                 ActionPrevious:
@@ -141,7 +157,8 @@
             height:60
             TextInput:
                 id:texto
-            Button:
+                multiline:False
+            ImageAdd:
                 text:'+'
                 size_hint_x:None
                 width:60
@@ -168,6 +185,19 @@
 <Root>:
     BoxLayout:
         orientation: 'vertical'
+        canvas.before:
+            Rectangle:
+                source:"cinza.jpg"
+                pos:self.pos
+                size:self.size
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title:'Objetos'
+                    on_release:app.root.current = 'objetos'
+                ActionButton:
+                    text:'Sair'
+                    on_release:app.stop()
         BoxLayout:
             size_hint_y: None
             height: 30
@@ -182,14 +212,6 @@
             Image:
                 id: image
                 source: ""
-    ActionBar:
-        ActionView:
-            ActionPrevious:
-                title:'Objetos'
-                on_release:app.root.current = 'objetos'
-            ActionButton:
-                text:'Sair'
-                on_release:app.stop()
 
 <LoadDialog>:
     BoxLayout:

@@ -9,6 +9,7 @@ from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
 from kivy.uix.image import Image
+from kivy.uix.behaviors import ButtonBehavior
 import json
 
 import os
@@ -16,6 +17,17 @@ import os
 import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
+
+class ImageButton1(ButtonBehavior, Image):
+    source = 'locais.jpeg'
+
+class ImageButton2(ButtonBehavior, Image):
+    source = 'objetos.jpeg'
+
+class ImageButton3(ButtonBehavior, Image):
+    source = 'sair.jpeg'
+class ImageAdd(ButtonBehavior, Image):
+    source='plus.jpeg'
 
 try:
     FileNotFoundError
@@ -42,7 +54,7 @@ class MyImageWidget(Screen):
 class NaoEncontrado(Screen):
     def __init__(self,**kwargs):
         super(NaoEncontrado, self).__init__(**kwargs)
-        self.image = Image(source='naoencontrado.png')
+        self.image = Image(source='notfound.jpeg')
         self.add_widget(self.image)
 
 class DefinaImagem(Screen):
