@@ -28,6 +28,10 @@ class ImageButton3(ButtonBehavior, Image):
     source = 'sair.jpeg'
 class ImageAdd(ButtonBehavior, Image):
     source='plus.jpeg'
+class ImageLoad(ButtonBehavior,Image):
+    source='load.jpeg'
+class ImageSave(ButtonBehavior, Image):
+    source='save.jpeg'
 
 try:
     FileNotFoundError
@@ -60,7 +64,7 @@ class NaoEncontrado(Screen):
 class DefinaImagem(Screen):
     def __init__(self,**kwargs):
         super(DefinaImagem, self).__init__(**kwargs)
-        self.image = Image(source='semimagem.png')
+        self.image = Image(source='selecionefoto.jpeg')
         self.add_widget(self.image)
 
 
