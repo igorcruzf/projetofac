@@ -266,7 +266,7 @@ class Root2(Screen):
     def save(self):
 	with open((self.ids.image2.source), 'rb') as f:
             data = f.read()
-        with open(caminho+textodolocal, 'w') as stream:
+        with open(caminho+textodolocal, 'rw') as stream: #mudado pra rw
             stream.write(data)
 
         self.dismiss_popup()
@@ -297,7 +297,7 @@ class Root(Screen):
     def save(self):
 	with open((self.ids.image.source), 'rb') as f:
             data = f.read()
-        with open(caminho+textodoobjeto, 'w') as stream:
+        with open(caminho+textodoobjeto, 'rw') as stream: #mudado pra rw
             stream.write(data)
 
         self.dismiss_popup()
